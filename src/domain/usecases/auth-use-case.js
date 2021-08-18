@@ -14,10 +14,10 @@ module.exports = class AuthUseCase {
     }
 
     this.LoadUserByEmailRepository.load(email)
-
     const user = await this.LoadUserByEmailRepository.load(email)
     if (!user) {
       return null
     }
+    return null
   }
 }
