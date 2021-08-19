@@ -1,21 +1,8 @@
 
 const { MongoClient } = require('mongodb')
+const LoadUserByEmailRepository = require('./load-user-by-email-repository')
 
 let client, db
-class LoadUserByEmailRepository {
-  constructor (userModel) {
-    this.userModel = userModel
-  }
-
-  async load (email) {
-    const user = await this.userModel.findOne({ email })
-    if (!user) {
-      return null
-    }
-    return user
-  }
-}
-
 const makeSut = () => {
   const userModel = db.collection('users')
   const sut = new LoadUserByEmailRepository(userModel)
@@ -51,11 +38,15 @@ describe('LoadUserByEmailRepository', () => {
 
   test('Should return an user if user is found', async () => {
     const { sut, userModel } = makeSut()
-    await userModel.insertOne({
-      email: 'valid_email@email.com'
+    const fakeUser = await userModel.insertOne({
+      email: 'valid_email@email.com',
+      name: 'any_name',
+      age: 50,
+      state: 'any_state',
+      password: 'hashed_password'
     })
 
     const user = await sut.load('valid_email@email.com')
-    expect(user.email).toBe('valid_email@email.com')
+    expect(user.insertedId).toEqual(fakeUser._id)
   })
 })
