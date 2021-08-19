@@ -6,7 +6,7 @@ const makeSut = () => {
   return new TokenGenerator('secret')
 }
 
-describe('Email Validator', () => {
+describe('TokenGenerator', () => {
   test('Should return null if JWT returns null', async () => {
     const sut = makeSut()
     jwt.token = null
